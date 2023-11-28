@@ -1,12 +1,12 @@
 [package]
-name = "anchor-todo-list-project"
+name = "todo-list-app"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "anchor_todo_list_project"
+name = "todo_list_app"
 
 [features]
 no-entrypoint = []

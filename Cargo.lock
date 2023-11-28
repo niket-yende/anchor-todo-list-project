@@ -180,13 +180,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "anchor-todo-list-project"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
-]
-
-[[package]]
 name = "anyhow"
 version = "1.0.75"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1548,6 +1541,13 @@ name = "tinyvec_macros"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
+
+[[package]]
+name = "todo-list-app"
+version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+]
 
 [[package]]
 name = "toml"
