@@ -2,7 +2,7 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { AnchorTodoList } from "../target/types/anchor_todo_list";
 
-describe("anchor-todo-list", () => {
+describe("anchor-todo-list-project", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
 
