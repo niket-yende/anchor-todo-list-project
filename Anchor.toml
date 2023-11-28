@@ -2,7 +2,7 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-anchor_todo_list = "7FdoTRNSdgya71wk4h3ZSf4dtuiW7ZJozSG3RBR8sxQR"
+anchor_todo_list_project = "7FdoTRNSdgya71wk4h3ZSf4dtuiW7ZJozSG3RBR8sxQR"
 
 [registry]
 url = "https://api.apr.dev"
