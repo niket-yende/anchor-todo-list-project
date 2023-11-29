@@ -94,31 +94,51 @@ describe("todo-list-app", () => {
     assert.equal(tasks.length, 1);
   });
 
-  // it("can update a task to done", async () => {
-  //   const task = anchor.web3.Keypair.generate();
-  //   // create a new task
-  //   // fetch it from the same address
-  //   // then update
-  //   const tx = await program.methods
-  //     .updatingTask(true)
-  //     .accounts({
-  //       task: task.publicKey,
-  //       author: author.wallet.publicKey,
-  //     })
-  //     .signers([author])
-  //     .rpc();
+  it("can update a task to done", async () => {
+    const task = anchor.web3.Keypair.generate();
+    
+    // create a new task
+    const tx1 = await program.methods
+        .addingTask("Updating task")
+        .accounts({
+          task: task.publicKey,
+          author: author.wallet.publicKey,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .signers([task])
+        .rpc();
+    // fetch it from the same address
+    console.log("Your transaction signature for create ", tx1);
+    const taskAccount1 = await program.account.task.fetch(task.publicKey);
+    console.log("Your task", taskAccount1);
 
-  //   console.log("Your transaction signature", tx);
+    assert.equal(
+      taskAccount1.author.toBase58(),
+      author.wallet.publicKey.toBase58()
+    );
+    assert.equal(taskAccount1.text, "Updating task");
 
-  //   const taskAccount = await program.account.task.fetch(task.publicKey);
-  //   console.log("Your task", taskAccount);
+    // then update
+    const tx2 = await program.methods
+      .updatingTask(true)
+      .accounts({
+        task: task.publicKey,
+        author: author.wallet.publicKey,
+      })
+      .signers([]) // By default the anchor tests use the provider.wallet as the payer and signer for transactions.
+      .rpc();
 
-  //   assert.equal(
-  //     taskAccount.author.toBase58(),
-  //     author.wallet.publicKey.toBase58()
-  //   );
-  //   assert.equal(taskAccount.isDone, true);
-  // });
+    console.log("Your transaction signature for update", tx2);
+
+    const taskAccount = await program.account.task.fetch(task.publicKey);
+    console.log("Your task", taskAccount);
+
+    assert.equal(
+      taskAccount.author.toBase58(),
+      author.wallet.publicKey.toBase58()
+    );
+    assert.equal(taskAccount.isDone, true);
+  });
 
   it("cannot create a task with more than 400 characters", async () => {
     const task = anchor.web3.Keypair.generate();
