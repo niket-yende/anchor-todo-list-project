@@ -130,14 +130,60 @@ describe("todo-list-app", () => {
 
     console.log("Your transaction signature for update", tx2);
 
-    const taskAccount = await program.account.task.fetch(task.publicKey);
-    console.log("Your task", taskAccount);
+    const taskAccount2 = await program.account.task.fetch(task.publicKey);
+    console.log("Your task", taskAccount2);
 
     assert.equal(
-      taskAccount.author.toBase58(),
+      taskAccount2.author.toBase58(),
       author.wallet.publicKey.toBase58()
     );
-    assert.equal(taskAccount.isDone, true);
+    assert.equal(taskAccount2.isDone, true);
+  });
+
+  it("can delete a task", async () => {
+    const task = anchor.web3.Keypair.generate();
+    
+    // create a new task
+    const tx1 = await program.methods
+        .addingTask("Deleting task")
+        .accounts({
+          task: task.publicKey,
+          author: author.wallet.publicKey,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .signers([task])
+        .rpc();
+    // fetch it from the same address
+    console.log("Your transaction signature for create ", tx1);
+    const taskAccount1 = await program.account.task.fetch(task.publicKey);
+    console.log("Your task", taskAccount1);
+
+    assert.equal(
+      taskAccount1.author.toBase58(),
+      author.wallet.publicKey.toBase58()
+    );
+    assert.equal(taskAccount1.text, "Deleting task");
+
+    // then update
+    const tx2 = await program.methods
+      .deletingTask()
+      .accounts({
+        task: task.publicKey,
+        author: author.wallet.publicKey,
+      })
+      .signers([]) // By default the anchor tests use the provider.wallet as the payer and signer for transactions.
+      .rpc();
+
+    console.log("Your transaction signature for delete", tx2);
+
+    const taskAccount2 = await program.account.task.fetch(task.publicKey);
+    console.log("Your task", taskAccount2);
+
+    assert.equal(
+      taskAccount2.author.toBase58(),
+      author.wallet.publicKey.toBase58()
+    );
+    assert.equal(taskAccount2.isDone, true);
   });
 
   it("cannot create a task with more than 400 characters", async () => {
@@ -155,7 +201,6 @@ describe("todo-list-app", () => {
         .rpc();
       assert.fail("Expected a long string error");
     } catch (err) {
-      console.log(err.message)
       assert.include(err.message, "Expected a long string error");
     }
   });
